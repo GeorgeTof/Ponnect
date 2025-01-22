@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, FlatList } from 'react-native';
-import LocationService, { Location } from '@/services/locationService';
+import LocationService, { Location } from '@/services/LocationService';
 
 export default function Index() {
   const [locations, setLocations] = useState<Location[]>([]);
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   text: {
-    fontSize: 14, 
+    fontSize: 16,
     color: '#fff',
-  }
+  },
 });
