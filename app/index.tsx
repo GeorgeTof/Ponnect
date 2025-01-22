@@ -2,16 +2,19 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 
+import { useAuth } from '@/contexts/AuthContext';
 import Button from '@/components/Button';
 
 export default function Index() {   // actually login
   const router = useRouter();
-  const [username, setUsername] = useState('');
+  const [localUsername, setLocalUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { setUsername } = useAuth();
 
   function handleLogin() {
-    if (username === 'admin' && password === 'password') { // Example validation
+    if (localUsername === 'admin' && password === 'password') { // Example validation
       router.replace('/(tabs)'); // Navigate to the tabs
+      setUsername(localUsername);
       alert('You are successfully logged in!'); // DEBUG
     } else {
       alert('Invalid username or password');
@@ -35,8 +38,8 @@ export default function Index() {   // actually login
         style={styles.input}
         placeholder="Enter your username"
         placeholderTextColor="#888"
-        value={username}
-        onChangeText={setUsername}
+        value={localUsername}
+        onChangeText={setLocalUsername}
       />
 
       <Text style={styles.label}>Password</Text>
