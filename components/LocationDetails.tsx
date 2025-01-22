@@ -4,7 +4,6 @@ import {
   View,
   Text,
   Image,
-  Button,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
@@ -13,7 +12,7 @@ import type { Location } from '@/services/LocationService';
 
 interface LocationModalProps {
   visible: boolean;
-  location?: Location; // May be undefined if modal not needed
+  location?: Location;
   onClose: () => void;
   onCreateGroupEvent: () => void;
 }
@@ -25,11 +24,10 @@ const LocationModal: React.FC<LocationModalProps> = ({
   onCreateGroupEvent,
 }) => {
   if (!location) {
-    // If no location data, don’t render the modal
     return null;
   }
 
-  const { pictures, name, description, opens, closes } = location;
+  const { pictures, name, description, opens, closes, price, address: loc } = location;
 
   return (
     <Modal
@@ -40,68 +38,65 @@ const LocationModal: React.FC<LocationModalProps> = ({
     >
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
-          {/* Close button (optional) */}
-            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>X</Text>
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
 
           {/* First row: pictures in a horizontal scroll */}
-            {pictures && pictures.length > 0 && (
+          {pictures && pictures.length > 0 && (
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {pictures.map((pic, index) => {
+              {pictures.map((pic, index) => {
                 let imageSource;
 
-                // Switch on the filename, required by metro
                 switch (pic) {
-                    case 'gravity1.png':
+                  case 'gravity1.png':
                     imageSource = require('@/assets/images/gravity1.png');
                     break;
-                    case 'gravity2.png':
+                  case 'gravity2.png':
                     imageSource = require('@/assets/images/gravity2.png');
                     break;
-                    case 'gravity3.png':
+                  case 'gravity3.png':
                     imageSource = require('@/assets/images/gravity3.png');
                     break;
-                    default:
-                    // Fallback for anything else
+                  default:
                     imageSource = require('@/assets/images/default.png');
                     break;
                 }
 
                 return (
-                    <Image
+                  <Image
                     key={index}
                     source={imageSource}
                     style={styles.image}
                     resizeMode="cover"
-                    />
+                  />
                 );
-                })}
+              })}
             </ScrollView>
-            )}
+          )}
 
-          {/* Name */}
-            <Text style={styles.title}>{name}</Text>
+          <Text style={styles.title}>{name}</Text>
+          <Text style={styles.description}>{description}</Text>
 
-          {/* Description */}
-            <Text style={styles.description}>{description}</Text>
+          {(opens || closes) && (
+            <Text style={styles.description}>
+              Open hours: {opens ?? '—'} - {closes ?? '—'}
+            </Text>
+          )}
 
-          {/* Open hours (if any) */}
-            {(opens || closes) && (
-                <Text style={styles.description}>
-                Open hours: {opens ?? '—'} - {closes ?? '—'}
-                </Text>
-            )}
+          {/* Display location if available */}
+          {loc && <Text style={styles.description}>Location: {loc}</Text>}
 
-          {/* just a separator */}
-            <Text style={styles.description}></Text>
+          {/* Display price if available */}
+          {price !== undefined && (
+            <Text style={styles.description}>Price: {price}</Text>
+          )}
 
-          {/* Create Group Event button */}
-            <View style={styles.buttonWrapper}>
+          <View style={styles.buttonWrapper}>
             <TouchableOpacity style={styles.customButton} onPress={onCreateGroupEvent}>
               <Text style={styles.customButtonText}>Create a Group Event</Text>
             </TouchableOpacity>
-            </View>
+          </View>
         </View>
       </View>
     </Modal>
@@ -147,23 +142,18 @@ const styles = StyleSheet.create({
     color: '#eee',
     marginBottom: 8,
   },
-  hours: {
-    fontSize: 14,
-    color: '#bbb',
-    marginBottom: 16,
-  },
   buttonWrapper: {
     marginTop: 12,
     borderRadius: 6,
   },
   customButton: {
-    backgroundColor: '#fff', // Button background color
+    backgroundColor: '#fff',
     padding: 10,
     alignItems: 'center',
     borderRadius: 6,
   },
   customButtonText: {
-    color: '#000', // Button text color
+    color: '#000',
     fontSize: 16,
     fontWeight: 'bold',
   },

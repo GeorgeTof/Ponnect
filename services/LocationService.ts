@@ -2,13 +2,15 @@ import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from '
 import { db } from '@/services/firebaseConfig';
 
 export interface Location {
-  id: string; // assuming id is required
+  id: string;
   name: string;
   description: string;
   type: string;
-  opens?: string; 
-  closes?: string; 
+  opens?: string;
+  closes?: string;
   pictures?: string[];
+  address?: string;
+  price?: number;
 }
 
 const LOCATION_COLLECTION = 'locations';
