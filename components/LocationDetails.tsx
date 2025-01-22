@@ -88,14 +88,19 @@ const LocationModal: React.FC<LocationModalProps> = ({
 
           {/* Open hours (if any) */}
             {(opens || closes) && (
-                <Text style={styles.hours}>
+                <Text style={styles.description}>
                 Open hours: {opens ?? '—'} - {closes ?? '—'}
                 </Text>
             )}
 
+          {/* just a separator */}
+            <Text style={styles.description}></Text>
+
           {/* Create Group Event button */}
             <View style={styles.buttonWrapper}>
-                <Button title="Create a Group Event" onPress={onCreateGroupEvent} />
+            <TouchableOpacity style={styles.customButton} onPress={onCreateGroupEvent}>
+              <Text style={styles.customButtonText}>Create a Group Event</Text>
+            </TouchableOpacity>
             </View>
         </View>
       </View>
@@ -149,5 +154,17 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     marginTop: 12,
+    borderRadius: 6,
+  },
+  customButton: {
+    backgroundColor: '#fff', // Button background color
+    padding: 10,
+    alignItems: 'center',
+    borderRadius: 6,
+  },
+  customButtonText: {
+    color: '#000', // Button text color
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
