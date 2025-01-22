@@ -12,8 +12,8 @@ export default function Index() {   // actually login
   const { setUsername } = useAuth();
 
   function handleLogin() {
-    if (localUsername === 'admin' && password === 'password') { // Example validation
-      router.replace('/(tabs)'); // Navigate to the tabs
+    if (localUsername === 'Admin' && password === 'Password') { // TODO change to real validation
+      router.replace('/(tabs)'); 
       setUsername(localUsername);
       alert('You are successfully logged in!'); // DEBUG
     } else {
