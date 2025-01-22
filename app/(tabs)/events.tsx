@@ -1,9 +1,9 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet } from 'react-native';
 
-export default function Index() {
+export default function EventsScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Locations screen</Text>
+      <Text style={styles.text}>Group events screen</Text>
     </View>
   );
 }
