@@ -1,14 +1,22 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 
 import Button from '@/components/Button';
 
 export default function Index() {   // actually login
   const router = useRouter();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   function handleLogin() {
-    router.replace('/(tabs)'); // Navigate to the tabs
-    alert('You are succesfully logged in!');  // DEBUG
+    if (username === 'admin' && password === 'password') { // Example validation
+      router.replace('/(tabs)'); // Navigate to the tabs
+      alert('You are successfully logged in!'); // DEBUG
+    } else {
+      alert('Invalid username or password');
+    }
+
   }
 
   function handleSignUp() {
@@ -18,6 +26,33 @@ export default function Index() {   // actually login
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login Screen</Text>
+
+      <Text style={styles.largeSeparator}> </Text>
+      <Text style={styles.largeSeparator}> </Text>
+
+      <Text style={styles.label}>Username</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your username"
+        placeholderTextColor="#888"
+        value={username}
+        onChangeText={setUsername}
+      />
+
+      <Text style={styles.label}>Password</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your password"
+        placeholderTextColor="#888"
+        secureTextEntry={true}
+        value={password}
+        onChangeText={setPassword}
+      />
+
+      <Text style={styles.largeSeparator}> </Text>
+      <Text style={styles.largeSeparator}> </Text>
+
+
       <Button label="Sign Up" theme='secondary' onPress={handleSignUp} />
       <Text style={styles.separator}> </Text>
       <Button label="Log In" theme='primary' onPress={handleLogin} />
@@ -40,9 +75,31 @@ const styles = StyleSheet.create({
     fontSize: 14, 
     marginBottom: 4,
   },
+  largeSeparator: {
+    fontSize: 20, 
+    marginBottom: 10,
+  },
   title: {
     fontSize: 24, 
     marginBottom: 16 ,
     color: '#fff'
+  },
+    label: {
+    fontSize: 16,
+    color: '#fff',
+    alignSelf: 'flex-start',
+    marginLeft: 40,
+    marginBottom: 4,
+  },
+  input: {
+    width: '80%',
+    height: 40,
+    backgroundColor: '#333',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    color: '#fff',
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#555',
   },
 });
