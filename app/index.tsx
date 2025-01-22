@@ -3,40 +3,47 @@ import { useState } from 'react';
 import { useRouter } from 'expo-router';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/firebaseConfig';
 import Button from '@/components/Button';
 
-export default function Index() {   // actually login
+export default function Index() {   // actually the login page
   const router = useRouter();
   const [localUsername, setLocalUsername] = useState('');
   const [password, setPassword] = useState('');
   const { setUsername } = useAuth();
 
-  function handleLogin() {
-    if (localUsername === 'Admin' && password === 'Password') { // TODO change to real validation
-      router.replace('/(tabs)'); 
+  async function handleLogin() {
+    try {
+      await signInWithEmailAndPassword(auth, localUsername, password);
+      alert('Logged in successfully!');
       setUsername(localUsername);
-      alert('You are successfully logged in!'); // DEBUG
-    } else {
-      alert('Invalid username or password');
+      router.replace('/(tabs)');
+    } catch (error) {
+      alert((error as any).message || 'Failed to log in');
     }
-
   }
 
-  function handleSignUp() {
-    alert('You are succesfully logged in!');  // TODO
+  async function handleSignUp() {
+    try {
+      await createUserWithEmailAndPassword(auth, localUsername, password);
+      alert('User created successfully!');
+    } catch (error) {
+      alert((error as any).message || 'Failed to create user');
+    }
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login Screen</Text>
+      <Text style={styles.title}>Authentification</Text>
 
       <Text style={styles.largeSeparator}> </Text>
       <Text style={styles.largeSeparator}> </Text>
 
-      <Text style={styles.label}>Username</Text>
+      <Text style={styles.label}>User Email</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter your username"
+        placeholder="Enter your email"
         placeholderTextColor="#888"
         value={localUsername}
         onChangeText={setLocalUsername}
