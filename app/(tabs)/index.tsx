@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, FlatList, Pressable } from 'react-native';
+import { 
+  Text, 
+  View, 
+  StyleSheet, 
+  FlatList, 
+  Pressable, 
+  Button 
+} from 'react-native';
 import LocationService, { Location } from '@/services/LocationService';
+
+// Import your modal component (adjust the path if needed)
+import LocationDetails from '@/components/LocationDetails';
 
 export default function Index() {
   const [locations, setLocations] = useState<Location[]>([]);
@@ -11,6 +21,9 @@ export default function Index() {
     hobby: false,
     unwind: false,
   });
+
+  const [selectedLocation, setSelectedLocation] = useState<Location | undefined>(undefined);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -23,7 +36,6 @@ export default function Index() {
         setLoading(false);
       }
     };
-
     fetchLocations();
   }, []);
 
@@ -34,13 +46,22 @@ export default function Index() {
     }));
   };
 
-  // Check if any filter is turned on
   const isAnyFilterActive = filters.activity || filters.hobby || filters.unwind;
-
-  // Filter locations if any filter is active
   const filteredLocations = isAnyFilterActive
-    ? locations.filter((loc) => filters[loc.type as 'activity' | 'hobby' | 'unwind']) // only show if loc.type is toggled on
-    : locations; // show all if none are toggled
+    ? locations.filter((loc) =>
+        filters[loc.type as 'activity' | 'hobby' | 'unwind']
+      )
+    : locations;
+
+  const openLocationModal = (location: Location) => {
+    setSelectedLocation(location);
+    setModalVisible(true);
+  };
+
+  const closeLocationModal = () => {
+    setSelectedLocation(undefined);
+    setModalVisible(false);
+  };
 
   if (loading) {
     return (
@@ -58,7 +79,7 @@ export default function Index() {
           onPress={() => toggleFilter('activity')}
           style={[
             styles.filterButton,
-            filters.activity && styles.filterButtonActive, // change style if active
+            filters.activity && styles.filterButtonActive,
           ]}
         >
           <Text style={styles.filterButtonText}>Activity</Text>
@@ -94,8 +115,24 @@ export default function Index() {
             <Text style={styles.name}>{item.name}</Text>
             <Text style={styles.description}>{item.description}</Text>
             <Text style={styles.type}>Type: {item.type}</Text>
+            
+            <Button 
+              title="View Details"
+              onPress={() => openLocationModal(item)} 
+            />
           </View>
         )}
+      />
+
+      {/* Location Details Modal */}
+      <LocationDetails 
+        visible={modalVisible}
+        location={selectedLocation}
+        onClose={closeLocationModal}
+        onCreateGroupEvent={() => {
+          // Add your logic for creating a group event here
+          console.log('Group event created');
+        }}
       />
     </View>
   );
