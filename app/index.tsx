@@ -1,11 +1,12 @@
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+
+import Button from '@/components/Button';
 
 export default function Index() {   // actually login
   const router = useRouter();
 
   function handleLogin() {
-    // ... authenticate the user ...
     router.replace('/(tabs)'); // Navigate to the tabs
     alert('You are succesfully logged in!');  // DEBUG
   }
@@ -13,12 +14,24 @@ export default function Index() {   // actually login
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login Screen</Text>
-      <Button title="Log In" onPress={handleLogin} />
+      <Button label="Log In" theme='primary' onPress={handleLogin} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  title: { fontSize: 24, marginBottom: 16 },
+  container: {
+    flex: 1,
+    backgroundColor: '#25292e',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    color: '#fff',
+  },
+  title: {
+    fontSize: 24, 
+    marginBottom: 16 ,
+    color: '#fff'
+  },
 });
