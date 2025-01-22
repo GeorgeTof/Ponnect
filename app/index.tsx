@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/firebaseConfig';
+import { auth } from '@/services/firebaseConfig';
 import Button from '@/components/Button';
 
 export default function Index() {   // actually the login page

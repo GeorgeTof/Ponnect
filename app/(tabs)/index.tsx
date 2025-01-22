@@ -1,30 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, FlatList } from 'react-native';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/firebaseConfig'; 
-
-interface Location {
-  id: string;
-  name: string;
-  description: string;
-  type: string;
-}
+import LocationService, { Location } from '@/services/locationService';
 
 export default function Index() {
-  const [locations, setLocations] = useState<Location[]>([]); 
-  const [loading, setLoading] = useState(true); 
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'locations'));
-        console.log(querySnapshot);
-        const data = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Location[]; 
+        const data = await LocationService.get();
         setLocations(data);
-        console.log(data);
       } catch (error) {
         console.error('Error fetching locations:', error);
       } finally {
@@ -45,9 +31,10 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Locations</Text>
       <FlatList
         data={locations}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id!}
         renderItem={({ item }) => (
           <View style={styles.item}>
             <Text style={styles.name}>{item.name}</Text>
@@ -92,7 +79,8 @@ const styles = StyleSheet.create({
     color: '#aaa',
     marginTop: 4,
   },
-    text: {
+  text: {
+    fontSize: 14, 
     color: '#fff',
-  },
+  }
 });
