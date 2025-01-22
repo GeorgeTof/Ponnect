@@ -106,7 +106,6 @@ export default function Index() {
         </Pressable>
       </View>
 
-      <Text style={styles.title}>Locations</Text>
       <FlatList
         data={filteredLocations}
         keyExtractor={(item) => item.id!}
@@ -115,11 +114,14 @@ export default function Index() {
             <Text style={styles.name}>{item.name}</Text>
             <Text style={styles.description}>{item.description}</Text>
             <Text style={styles.type}>Type: {item.type}</Text>
-            
-            <Button 
-              title="View Details"
-              onPress={() => openLocationModal(item)} 
-            />
+            <Text style={styles.type}></Text>
+
+            <Pressable
+              style={styles.viewDetailsButton}
+              onPress={() => openLocationModal(item)}
+            >
+              <Text style={styles.viewDetailsButtonText}>View Details</Text>
+            </Pressable>
           </View>
         )}
       />
@@ -196,5 +198,18 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     color: '#fff',
+  },
+  viewDetailsButton: {
+    backgroundColor: '#fff', // White background
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10, // Rounded corners
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  viewDetailsButtonText: {
+    color: '#000', // Black text color
+    fontWeight: '600',
+    fontSize: 16,
   },
 });
