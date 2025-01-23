@@ -47,14 +47,33 @@ export default function EventsScreen() {
     }));
   };
 
-  // Dummy enroll function
-  const handleEnroll = (eventId: string) => {
-    console.log(`User wants to enroll in event with ID: ${eventId}`);
-    // Replace with actual enroll logic
+  // Determine the label for the action button
+  const getButtonLabel = (eventItem: Event) => {
+    if (eventItem.admin === username) {
+      return 'Delete'; 
+    } else if (eventItem.members.includes(username)) {
+      return 'Leave';
+    } else {
+      return 'Join';
+    }
+  };
+
+  // Handle button presses depending on the label
+  const handleEventAction = (eventItem: Event) => {
+    const label = getButtonLabel(eventItem);
+    if (label === 'Delete') {
+      console.log(`User ${username} wants to delete event: ${eventItem.id}`);
+      // TODO: Implement delete logic here
+    } else if (label === 'Leave') {
+      console.log(`User ${username} wants to leave event: ${eventItem.id}`);
+      // TODO: Implement leaving logic here (e.g., remove username from members array)
+    } else {
+      console.log(`User ${username} wants to join event: ${eventItem.id}`);
+      // TODO: Implement joining logic here (e.g., add username to members array)
+    }
   };
 
   // If any filter is active, filter accordingly
-  // If both filters are on, we show only events that match BOTH conditions.
   const filteredEvents = (() => {
     // No filters active -> show all
     if (!filters.joined && !filters.mine) {
@@ -85,7 +104,7 @@ export default function EventsScreen() {
   const renderItem = ({ item }: { item: Event }) => {
     return (
       <View style={styles.eventItem}>
-        <Text style={styles.eventName}>{item.admin}'s Event</Text>
+        <Text style={styles.eventName}>Event: {item.admin}'s Event</Text>
         <Text style={styles.eventInfo}>Location: {item.location}</Text>
         <Text style={styles.eventInfo}>Max Members: {item.nrMembers}</Text>
         <Text style={styles.eventInfo}>
@@ -96,9 +115,9 @@ export default function EventsScreen() {
 
         <Pressable
           style={styles.enrollButton}
-          onPress={() => handleEnroll(item.id)}
+          onPress={() => handleEventAction(item)}
         >
-          <Text style={styles.enrollButtonText}>Enroll</Text>
+          <Text style={styles.enrollButtonText}>{getButtonLabel(item)}</Text>
         </Pressable>
       </View>
     );
@@ -106,7 +125,6 @@ export default function EventsScreen() {
 
   return (
     <View style={styles.container}>
-
       {/* Filter Row */}
       <View style={styles.filterRow}>
         {/* "Events I Joined" filter button */}
