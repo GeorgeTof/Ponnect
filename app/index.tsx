@@ -20,7 +20,18 @@ export default function Index() {   // actually the login page
       setUsername(localUsername);
       router.replace('/(tabs)');
     } catch (error) {
-      alert((error as any).message || 'Failed to log in');
+      let message = 'Failed to log in';
+      console.log((error as any).message);
+      switch((error as any).message) { 
+        case "Firebase: Error (auth/invalid-credential).": { 
+            message = "Password or email is incorrect!";
+            break; 
+        } 
+        default: { 
+            break; 
+        } 
+      } 
+      alert(message);
     }
   }
 
@@ -29,7 +40,26 @@ export default function Index() {   // actually the login page
       await createUserWithEmailAndPassword(auth, localUsername, password);
       alert('User created successfully!');
     } catch (error) {
-      alert((error as any).message || 'Failed to create user');
+      let message = 'Failed to create user';
+      console.log((error as any).message);
+      switch((error as any).message) { 
+        case "Firebase: Error (auth/invalid-credential).": { 
+            //statements; 
+            break; 
+        } 
+        case "Firebase: Password should be at least 6 characters (auth/weak-password).": { 
+            message = "Password should be at least 6 characters";
+            break; 
+        } 
+        case "Firebase: Error (auth/email-already-in-use).": { 
+            message = "Email is already in use!";
+            break; 
+        } 
+        default: { 
+            break; 
+        } 
+      } 
+      alert(message);
     }
   }
 
