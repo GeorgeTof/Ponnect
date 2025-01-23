@@ -68,6 +68,7 @@ export default function ProfileScreen() {
           onChangeText={(text) => handleInputChange('nickname', text)} 
         />
       </View>
+      <Text style={styles.separator}> </Text>
       <View style={styles.labelContainer}>
         <Text style={styles.label}>Age:</Text>
         <TextInput 
@@ -77,6 +78,7 @@ export default function ProfileScreen() {
           onChangeText={(text) => handleInputChange('age', text ? parseInt(text) : undefined)} 
         />
       </View>
+      <Text style={styles.separator}> </Text>
       <View style={styles.labelContainer}>
         <Text style={styles.label}>Specialization:</Text>
         <TextInput 
@@ -85,6 +87,7 @@ export default function ProfileScreen() {
           onChangeText={(text) => handleInputChange('specialization', text)} 
         />
       </View>
+      <Text style={styles.separator}> </Text>
       <View style={styles.labelContainer}>
         <Text style={styles.label}>University:</Text>
         <TextInput 
@@ -93,25 +96,45 @@ export default function ProfileScreen() {
           onChangeText={(text) => handleInputChange('university', text)} 
         />
       </View>
-      {/* Add a button to save changes (if needed) */}
-      {isModified && (
-        <View style={styles.buttonContainer}>
+      <View style={styles.footerContainer}>
+        <Text style={styles.largeSeparator}> </Text>
+        <Text style={styles.largeSeparator}> </Text>
+        <Text style={styles.largeSeparator}> </Text>
+        {isModified && (
+          <View style={styles.buttonContainer}>
+            <Button 
+              label="Save Changes" 
+              theme="secondary"
+              onPress={() => { 
+                // Handle saving the editedUser data 
+                console.log('Saving changes:', editedUser); 
+                // Call UserService.updateUser(userId, editedUser) 
+              }} 
+            />
+            <Text style={styles.separator}> </Text>
+          </View>
+        )}
+        <View style={styles.buttonContainer}> 
           <Button 
-            label="Save Changes" 
-            theme="secondary"
-            onPress={() => { 
-              // Handle saving the editedUser data 
-              console.log('Saving changes:', editedUser); 
-              // Call UserService.updateUser(userId, editedUser) 
-            }} 
-          />
-        </View>
-      )}
+            label="Log Out" 
+            theme="danger" 
+            onPress={() => alert("Logging out")} 
+          /> 
+        </View> 
+      </View> 
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  separator: {
+    fontSize: 14, 
+    marginBottom: 4,
+  },
+  largeSeparator: {
+    fontSize: 20, 
+    marginBottom: 10,
+  },
   container: {
     flex: 1,
     backgroundColor: '#25292e',
@@ -153,5 +176,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 3,
+  },
+  footerContainer: {
+    flex: 1 / 2,
+    alignItems: 'center',
   },
 });
