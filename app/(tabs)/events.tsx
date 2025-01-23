@@ -50,7 +50,7 @@ export default function EventsScreen() {
   // Determine the label for the action button
   const getButtonLabel = (eventItem: Event) => {
     if (eventItem.admin === username) {
-      return 'Delete'; 
+      return 'Delete';
     } else if (eventItem.members.includes(username)) {
       return 'Leave';
     } else {
@@ -59,17 +59,43 @@ export default function EventsScreen() {
   };
 
   // Handle button presses depending on the label
-  const handleEventAction = (eventItem: Event) => {
+  const handleEventAction = async (eventItem: Event) => {
     const label = getButtonLabel(eventItem);
-    if (label === 'Delete') {
-      console.log(`User ${username} wants to delete event: ${eventItem.id}`);
-      // TODO: Implement delete logic here
-    } else if (label === 'Leave') {
-      console.log(`User ${username} wants to leave event: ${eventItem.id}`);
-      // TODO: Implement leaving logic here (e.g., remove username from members array)
-    } else {
-      console.log(`User ${username} wants to join event: ${eventItem.id}`);
-      // TODO: Implement joining logic here (e.g., add username to members array)
+
+    try {
+      if (label === 'Delete') {
+        console.log(`User ${username} wants to delete event: ${eventItem.id}`);
+        await EventService.delete(eventItem.id);
+        setEvents((prevEvents) =>
+          prevEvents.filter((ev) => ev.id !== eventItem.id)
+        );
+      } else if (label === 'Leave') {
+        console.log(`User ${username} wants to leave event: ${eventItem.id}`);
+        const updatedMembers = eventItem.members.filter(
+          (member) => member !== username
+        );
+        // Update the event in Firestore
+        await EventService.update(eventItem.id, { members: updatedMembers });
+        // Reflect the change in local state
+        setEvents((prevEvents) =>
+          prevEvents.map((ev) =>
+            ev.id === eventItem.id ? { ...ev, members: updatedMembers } : ev
+          )
+        );
+      } else {
+        console.log(`User ${username} wants to join event: ${eventItem.id}`);
+        const updatedMembers = [...eventItem.members, username];
+        // Update the event in Firestore
+        await EventService.update(eventItem.id, { members: updatedMembers });
+        // Reflect the change in local state
+        setEvents((prevEvents) =>
+          prevEvents.map((ev) =>
+            ev.id === eventItem.id ? { ...ev, members: updatedMembers } : ev
+          )
+        );
+      }
+    } catch (error) {
+      console.error(`Error performing '${label}' action:`, error);
     }
   };
 
