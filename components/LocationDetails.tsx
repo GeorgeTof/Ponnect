@@ -132,10 +132,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   image: {
-    width: 120,
-    height: 120,
-    borderRadius: 6,
-    marginRight: 8,
+    width: 200, 
+    height: 200, 
+    borderRadius: 10,
+    marginRight: 12, 
   },
   title: {
     fontSize: 20,
