@@ -5,6 +5,10 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/services/firebaseConfig';
+
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '@/services/firebaseConfig';
+
 import Button from '@/components/Button';
 
 export default function Index() {   // actually the login page
@@ -22,15 +26,15 @@ export default function Index() {   // actually the login page
     } catch (error) {
       let message = 'Failed to log in';
       console.log((error as any).message);
-      switch((error as any).message) { 
-        case "Firebase: Error (auth/invalid-credential).": { 
-            message = "Password or email is incorrect!";
-            break; 
-        } 
-        default: { 
-            break; 
-        } 
-      } 
+      switch ((error as any).message) {
+        case 'Firebase: Error (auth/invalid-credential).': {
+          message = 'Password or email is incorrect!';
+          break;
+        }
+        default: {
+          break;
+        }
+      }
       alert(message);
     }
   }
@@ -39,26 +43,35 @@ export default function Index() {   // actually the login page
     try {
       await createUserWithEmailAndPassword(auth, localUsername, password);
       alert('User created successfully!');
+
+      await setDoc(doc(db, 'users', localUsername), {
+        age: 0,
+        nickname: 'Guest',
+        specialization: '',
+        university: '',
+      });
+
+      // alert('User document created with default fields!');
+
     } catch (error) {
       let message = 'Failed to create user';
       console.log((error as any).message);
-      switch((error as any).message) { 
-        case "Firebase: Error (auth/invalid-credential).": { 
-            //statements; 
-            break; 
-        } 
-        case "Firebase: Password should be at least 6 characters (auth/weak-password).": { 
-            message = "Password should be at least 6 characters";
-            break; 
-        } 
-        case "Firebase: Error (auth/email-already-in-use).": { 
-            message = "Email is already in use!";
-            break; 
-        } 
-        default: { 
-            break; 
-        } 
-      } 
+      switch ((error as any).message) {
+        case 'Firebase: Error (auth/invalid-credential).': {
+          break;
+        }
+        case 'Firebase: Password should be at least 6 characters (auth/weak-password).': {
+          message = 'Password should be at least 6 characters';
+          break;
+        }
+        case 'Firebase: Error (auth/email-already-in-use).': {
+          message = 'Email is already in use!';
+          break;
+        }
+        default: {
+          break;
+        }
+      }
       alert(message);
     }
   }
@@ -92,10 +105,9 @@ export default function Index() {   // actually the login page
       <Text style={styles.largeSeparator}> </Text>
       <Text style={styles.largeSeparator}> </Text>
 
-
-      <Button label="Sign Up" theme='secondary' onPress={handleSignUp} />
+      <Button label="Sign Up" theme="secondary" onPress={handleSignUp} />
       <Text style={styles.separator}> </Text>
-      <Button label="Log In" theme='primary' onPress={handleLogin} />
+      <Button label="Log In" theme="primary" onPress={handleLogin} />
     </View>
   );
 }
@@ -108,23 +120,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontSize: 14, 
+    fontSize: 14,
     color: '#fff',
   },
   separator: {
-    fontSize: 14, 
+    fontSize: 14,
     marginBottom: 4,
   },
   largeSeparator: {
-    fontSize: 20, 
+    fontSize: 20,
     marginBottom: 10,
   },
   title: {
-    fontSize: 24, 
-    marginBottom: 16 ,
-    color: '#fff'
+    fontSize: 24,
+    marginBottom: 16,
+    color: '#fff',
   },
-    label: {
+  label: {
     fontSize: 16,
     color: '#fff',
     alignSelf: 'flex-start',
