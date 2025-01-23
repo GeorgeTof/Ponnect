@@ -102,7 +102,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.username}>Welcome, {username}!</Text>
+      <Text style={styles.username}>Welcome, {editedUser?.nickname}!</Text>
 
       {/* Nickname */}
       <View style={styles.labelContainer}>
