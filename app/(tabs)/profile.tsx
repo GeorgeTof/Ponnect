@@ -3,9 +3,12 @@ import { Text, View, StyleSheet, TextInput } from 'react-native';
 import { useAuth } from '@/contexts/AuthContext';
 import UserService, { User } from '@/services/UserService';
 import Button from '@/components/Button';
+import { useRouter } from 'expo-router';
+
 
 
 export default function ProfileScreen() {
+  const router = useRouter();
   const { username } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,6 +37,10 @@ export default function ProfileScreen() {
 
     fetchData();
   }, []); 
+
+  function logOut() {
+    router.replace('../index');
+  }
 
   const handleInputChange = (key: keyof User, value: string | number | undefined) => {
     setEditedUser({ ...editedUser, [key]: value } as User);
@@ -118,7 +125,7 @@ export default function ProfileScreen() {
           <Button 
             label="Log Out" 
             theme="danger" 
-            onPress={() => alert("Logging out")} 
+            onPress={logOut} 
           /> 
         </View> 
       </View> 

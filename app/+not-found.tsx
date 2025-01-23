@@ -5,7 +5,7 @@ import React from 'react';
 export default function NotFoundScreen() {          // TODO go to the login screen
   return (
     <>
-      <Stack.Screen options={{ title: 'Oops! Not Found' }} />
+      <Stack.Screen options={{ title: 'Logged out' }} />
       <View style={styles.container}>
         <Link href="/" style={styles.button}>
           Go back to Home screen!     
