@@ -131,10 +131,6 @@ export default function Index() {
         visible={modalVisible}
         location={selectedLocation}
         onClose={closeLocationModal}
-        onCreateGroupEvent={() => {
-          // Add your logic for creating a group event here
-          console.log('Group event created');
-        }}
       />
     </View>
   );

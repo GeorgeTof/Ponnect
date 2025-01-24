@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Modal,
   View,
@@ -9,20 +9,23 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import type { Location } from '@/services/LocationService';
+import CreateGroupEventModal from '@/components/CreateGroupEventModal';
 
 interface LocationModalProps {
   visible: boolean;
   location?: Location;
   onClose: () => void;
-  onCreateGroupEvent: () => void;
 }
 
 const LocationModal: React.FC<LocationModalProps> = ({
   visible,
   location,
   onClose,
-  onCreateGroupEvent,
 }) => {
+  // Local state to control the visibility of CreateGroupEventModal
+  const [createModalVisible, setCreateModalVisible] = useState(false);
+
+  // If there's no location, we won't render anything
   if (!location) {
     return null;
   }
@@ -42,12 +45,11 @@ const LocationModal: React.FC<LocationModalProps> = ({
             <Text style={styles.closeButtonText}>X</Text>
           </TouchableOpacity>
 
-          {/* First row: pictures in a horizontal scroll */}
+          {/* Pictures row */}
           {pictures && pictures.length > 0 && (
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {pictures.map((pic, index) => {
                 let imageSource;
-
                 switch (pic) {
                   case 'gravity1.png':
                     imageSource = require('@/assets/images/gravity1.png');
@@ -89,22 +91,29 @@ const LocationModal: React.FC<LocationModalProps> = ({
               Open hours: {opens ?? '—'} - {closes ?? '—'}
             </Text>
           )}
-
-          {/* Display location if available */}
           {loc && <Text style={styles.description}>Location: {loc}</Text>}
-
-          {/* Display price if available */}
           {price !== undefined && (
             <Text style={styles.description}>Price: {price}</Text>
           )}
 
+          {/* Button to open CreateGroupEventModal */}
           <View style={styles.buttonWrapper}>
-            <TouchableOpacity style={styles.customButton} onPress={onCreateGroupEvent}>
+            <TouchableOpacity
+              style={styles.customButton}
+              onPress={() => setCreateModalVisible(true)}
+            >
               <Text style={styles.customButtonText}>Create a Group Event</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
+
+      {/* The new modal for creating group events */}
+      <CreateGroupEventModal
+        visible={createModalVisible}
+        locationName={name} // pass the location name
+        onClose={() => setCreateModalVisible(false)}
+      />
     </Modal>
   );
 };
@@ -132,10 +141,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   image: {
-    width: 200, 
-    height: 200, 
+    width: 200,
+    height: 200,
     borderRadius: 10,
-    marginRight: 12, 
+    marginRight: 12,
   },
   title: {
     fontSize: 20,
