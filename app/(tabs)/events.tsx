@@ -7,7 +7,6 @@ import {
   Pressable,
   ActivityIndicator,
 } from 'react-native';
-
 import { useAuth } from '@/contexts/AuthContext';
 import EventService, { Event } from '@/services/EventService';
 
@@ -24,27 +23,41 @@ export default function EventsScreen() {
   // The current user from your Auth context
   const { username } = useAuth();
 
-  // Fetch all events from Firestore on mount
+  /**
+   * Fetch all events from Firestore.
+   * Use this function both on mount and
+   * whenever the "My Events" filter is enabled.
+   */
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const data = await EventService.get();
+      setEvents(data);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch all events on mount
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const data = await EventService.get();
-        setEvents(data);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchEvents();
   }, []);
 
   // Toggle a specific filter on/off
+  // If user toggles "mine" ON, refetch the data
   const toggleFilter = (key: 'joined' | 'mine') => {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
+    setFilters((prevFilters) => {
+      const newValue = !prevFilters[key];
+      const updatedFilters = { ...prevFilters, [key]: newValue };
+
+      // If toggling 'mine' to true, refetch events from Firebase
+      if (key === 'mine' && newValue) {
+        fetchEvents();
+      }
+      return updatedFilters;
+    });
   };
 
   // Determine the label for the action button
@@ -74,7 +87,7 @@ export default function EventsScreen() {
         const updatedMembers = eventItem.members.filter(
           (member) => member !== username
         );
-        // Update the event in Firestore
+        // Update Firestore
         await EventService.update(eventItem.id, { members: updatedMembers });
         // Reflect the change in local state
         setEvents((prevEvents) =>
@@ -85,7 +98,7 @@ export default function EventsScreen() {
       } else {
         console.log(`User ${username} wants to join event: ${eventItem.id}`);
         const updatedMembers = [...eventItem.members, username];
-        // Update the event in Firestore
+        // Update Firestore
         await EventService.update(eventItem.id, { members: updatedMembers });
         // Reflect the change in local state
         setEvents((prevEvents) =>
@@ -101,9 +114,8 @@ export default function EventsScreen() {
 
   // If any filter is active, filter accordingly
   const filteredEvents = (() => {
-    // No filters active -> show all
     if (!filters.joined && !filters.mine) {
-      return events;
+      return events; // No filters active => show all
     }
     return events.filter((event) => {
       // If 'joined' filter is active, user must be in event.members
@@ -127,10 +139,17 @@ export default function EventsScreen() {
     );
   }
 
+  // Render an individual event item
   const renderItem = ({ item }: { item: Event }) => {
     return (
       <View style={styles.eventItem}>
-        <Text style={styles.eventName}>Event: {item.admin}'s Event</Text>
+        {/* 
+          1) Changed from "... {item.admin}'s Event" 
+             to "... {item.name}" 
+             per your request. 
+        */}
+        <Text style={styles.eventName}>{item.name}</Text>
+
         <Text style={styles.eventInfo}>Location: {item.location}</Text>
         <Text style={styles.eventInfo}>Max Members: {item.nrMembers}</Text>
         <Text style={styles.eventInfo}>
@@ -139,10 +158,7 @@ export default function EventsScreen() {
         <Text style={styles.eventInfo}>Date: {item.date}</Text>
         <Text style={styles.eventInfo}>Time: {item.time}</Text>
 
-        <Pressable
-          style={styles.enrollButton}
-          onPress={() => handleEventAction(item)}
-        >
+        <Pressable style={styles.enrollButton} onPress={() => handleEventAction(item)}>
           <Text style={styles.enrollButtonText}>{getButtonLabel(item)}</Text>
         </Pressable>
       </View>
