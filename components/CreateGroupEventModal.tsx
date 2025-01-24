@@ -6,15 +6,17 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
+import { useAuth } from '@/contexts/AuthContext';
+import EventService from '@/services/EventService';
 
 interface CreateGroupEventModalProps {
   visible: boolean;
-  locationName: string; // pass the location name here
+  locationName: string; // Name passed from parent modal
   onClose: () => void;
 }
 
-// No actual Firebase save right now—just a dummy handler
 const CreateGroupEventModal: React.FC<CreateGroupEventModalProps> = ({
   visible,
   locationName,
@@ -25,19 +27,44 @@ const CreateGroupEventModal: React.FC<CreateGroupEventModalProps> = ({
   const [time, setTime] = useState('');
   const [maxPeople, setMaxPeople] = useState('');
 
-  const handleCreateEvent = () => {
-    console.log('Create event called with:', {
-      name: eventName,
-      date,
-      time,
-      maximumPeopleAllowed: maxPeople,
-      location: locationName,
-    });
-    // For now, just console.log and close modal
-    onClose();
+  // Get the current user's username from context
+  const { username } = useAuth();
+
+  const handleCreateEvent = async () => {
+    // 1. Validate fields (cannot be empty)
+    if (!eventName.trim() || !date.trim() || !time.trim() || !maxPeople.trim()) {
+      Alert.alert('Error', 'All fields are required!');
+      return;
+    }
+
+    try {
+      // 2. Convert maxPeople to a number
+      const nrMembers = parseInt(maxPeople, 10);
+      if (isNaN(nrMembers)) {
+        Alert.alert('Error', 'Maximum people allowed must be a number!');
+        return;
+      }
+
+      // 3. Insert new event into Firebase
+      await EventService.insert({
+        admin: username,
+        location: locationName,
+        nrMembers,
+        members: [username], 
+        time,
+        date,
+        name: eventName, 
+      } as any); // Using `as any` if your Event interface doesn't yet have `name`
+
+      Alert.alert('Success', 'Event created successfully!');
+      // 4. Close the modal
+      onClose();
+    } catch (error) {
+      Alert.alert('Error', 'Could not create event');
+      console.error('Error creating event:', error);
+    }
   };
 
-  // If the modal is not visible, return null to avoid rendering overhead
   if (!visible) return null;
 
   return (
@@ -55,38 +82,36 @@ const CreateGroupEventModal: React.FC<CreateGroupEventModalProps> = ({
           <TextInput
             style={styles.input}
             placeholder="Enter a name for your event"
-            onChangeText={setEventName}
             value={eventName}
+            onChangeText={setEventName}
           />
 
           <Text style={styles.label}>Date:</Text>
           <TextInput
             style={styles.input}
             placeholder="e.g. 24.02"
-            onChangeText={setDate}
             value={date}
+            onChangeText={setDate}
           />
 
           <Text style={styles.label}>Time:</Text>
           <TextInput
             style={styles.input}
             placeholder="e.g. 18:00"
-            onChangeText={setTime}
             value={time}
+            onChangeText={setTime}
           />
 
           <Text style={styles.label}>Maximum people allowed:</Text>
           <TextInput
             style={styles.input}
             placeholder="e.g. 10"
-            onChangeText={setMaxPeople}
             value={maxPeople}
+            onChangeText={setMaxPeople}
             keyboardType="numeric"
           />
 
-          <Text style={styles.locationText}>
-            Location: {locationName}
-          </Text>
+          <Text style={styles.locationText}>Location: {locationName}</Text>
 
           <TouchableOpacity style={styles.createButton} onPress={handleCreateEvent}>
             <Text style={styles.createButtonText}>Create the event!</Text>

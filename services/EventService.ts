@@ -3,6 +3,7 @@ import { db } from '@/services/firebaseConfig';
 
 export interface Event {
   id: string;
+  name?: string;
   admin: string;
   location: string;
   nrMembers: number;
