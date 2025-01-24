@@ -62,7 +62,7 @@ const CreateGroupEventModal: React.FC<CreateGroupEventModalProps> = ({
           <Text style={styles.label}>Date:</Text>
           <TextInput
             style={styles.input}
-            placeholder="e.g. 2024-12-31"
+            placeholder="e.g. 24.02"
             onChangeText={setDate}
             value={date}
           />

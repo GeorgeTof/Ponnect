@@ -134,7 +134,7 @@ export default function EventsScreen() {
         <Text style={styles.eventInfo}>Location: {item.location}</Text>
         <Text style={styles.eventInfo}>Max Members: {item.nrMembers}</Text>
         <Text style={styles.eventInfo}>
-          Current Members: {item.members.join(', ') || 'None'}
+          Current Members: {item.members.join(',\n   ') || 'None'}
         </Text>
         <Text style={styles.eventInfo}>Date: {item.date}</Text>
         <Text style={styles.eventInfo}>Time: {item.time}</Text>
