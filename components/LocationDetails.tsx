@@ -66,6 +66,15 @@ const LocationModal: React.FC<LocationModalProps> = ({
                   case 'escroom1.png':
                     imageSource = require('@/assets/images/escroom1.png');
                     break;
+                  case 'tengu1.png':
+                    imageSource = require('@/assets/images/tengu1.png');
+                    break;
+                  case 'samsa1.png':
+                    imageSource = require('@/assets/images/samsa1.png');
+                    break;
+                  case 'samsa2.png':
+                    imageSource = require('@/assets/images/samsa2.png');
+                    break;
                   default:
                     imageSource = require('@/assets/images/default.png');
                     break;
