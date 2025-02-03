@@ -21,8 +21,6 @@ This is a **cross-platform mobile application** built using the [Expo](https://e
   Each user has a profile that can be edited to enhance credibility and trust within the community.  
 
 
-
-
 ## Get started
 
 1. Install dependencies
@@ -45,3 +43,19 @@ In the output, you'll find options to open the app in a
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
 
+## Results
+
+- **Locations Page**  
+  ![image](https://github.com/GeorgeTof/Ponnect/blob/main/assets/readme_images/list.jpg)
+
+- **Locations details**  
+  ![image](https://github.com/GeorgeTof/Ponnect/blob/main/assets/readme_images/details.jpg)
+
+- **Creating a group event**  
+  ![image](https://github.com/GeorgeTof/Ponnect/blob/main/assets/readme_images/create.jpg)
+
+- **Managing group events**  
+  ![image](https://github.com/GeorgeTof/Ponnect/blob/main/assets/readme_images/events.jpg)
+
+- **Interactive map**  
+  ![image](https://github.com/GeorgeTof/Ponnect/blob/main/assets/readme_images/map.jpg)
