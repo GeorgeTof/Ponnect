@@ -14,7 +14,7 @@ This is a **cross-platform mobile application** built using the [Expo](https://e
 - **Location Filtering & Details**  
   Users can filter locations by category and view **detailed location pages** with pictures, descriptions, and other relevant information.  
 
-- **Unique Group Event Creation**  
+- **Group Events**  
   Unlike other platforms, Ponnect allows users to **create group events** at specific locations on a chosen date. These events serve as **open invitations** for other users to join.
 
 - **User Profiles**  
